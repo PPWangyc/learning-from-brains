@@ -159,12 +159,19 @@ class BaseEmbedder(torch.nn.Module):
         t_rs: torch.tensor
         ) -> torch.tensor:
         assert torch.max(t_rs) <= self.t_r_max, f'too many t_rs; maximum t_r is {self.t_r_max}'
+        print('t_rs shape', t_rs.shape)
+        print('t_rs', t_rs)
         t_rs_rounded = self._round_to_precision(
             x=t_rs,
             precision=self.t_r_precision
         )
+        print('t_rs_rounded', t_rs_rounded)
+        print('t_rs_rounded shape', t_rs_rounded.shape)
+        print('tr precision', self.t_r_precision)
         position_ids = (t_rs_rounded * int(1 / self.t_r_precision)).to(torch.long)
+        print('position_ids', position_ids)
         dummy_filler = torch.ones_like(position_ids) * self.num_t_r_embeddings # last embedding is dummy
+        print('dummy_filler', dummy_filler)
         return torch.where(
             position_ids >= 0,
             position_ids,
@@ -182,6 +189,9 @@ class BaseEmbedder(torch.nn.Module):
         t_rs: torch.tensor
         ) -> torch.tensor:
         t_r_position_ids = self.convert_t_rs_to_position_ids(t_rs=t_rs)
+        print('t_r_position_ids', t_r_position_ids)
+        print('t_r_position_ids shape', t_r_position_ids.shape)
+        exit()
         return self.wt_re(t_r_position_ids)
     
     def forward(

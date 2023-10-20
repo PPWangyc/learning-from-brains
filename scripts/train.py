@@ -1073,5 +1073,12 @@ def get_args() -> argparse.ArgumentParser:
 
 
 if __name__ == '__main__':
+    np.random.seed(1234)
+    import torch
+    torch.manual_seed(1234)
+    torch.cuda.manual_seed_all(1234)
+    torch.backends.cudnn.deterministic = True
+    random.seed(1234)
+     
 
     trainer = train()

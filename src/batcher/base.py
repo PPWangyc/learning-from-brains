@@ -248,8 +248,11 @@ class BaseBatcher:
         for key, value in sample.items():
             if key == "bold.pyd":
 
-                bold = np.array(value).astype(np.float)
-                
+                bold = np.array(value)
+                print("BOLD Original:")
+                print(bold)
+                print(bold.shape)
+                print("TR:",t_r)
                 if self.bold_dummy_mode:
                     bold = self.make_bold_dummy(
                         bold_shape=bold.shape,
@@ -258,6 +261,9 @@ class BaseBatcher:
                     )
 
                 seq_on, seq_len = self._sample_seq_on_and_len(bold_len=len(bold))
+                print("BOLD Sampled Seq On/ Len:")
+                print(seq_on)
+                print(seq_len)
                 bold = bold[seq_on:seq_on+seq_len]
                 t_rs = np.arange(seq_len) * t_r
                 attention_mask = np.ones(seq_len)
@@ -276,8 +282,14 @@ class BaseBatcher:
                     n=self.seq_max,
                     pad_value=0
                 )
+                print("BOLD Final:")
+                print(bold)
+                print(bold.shape)
+                print(t_rs)
                 out["inputs"] = torch.from_numpy(bold).to(torch.float)
                 out['t_rs'] = torch.from_numpy(t_rs).to(torch.float)
+                print("Final T_rs:")
+                print(t_rs)
                 out["attention_mask"] = torch.from_numpy(attention_mask).to(torch.long)
                 out['seq_on'] = seq_on
                 out['seq_len'] = seq_len
